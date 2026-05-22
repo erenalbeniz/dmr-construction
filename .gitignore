@@ -1,0 +1,19 @@
+# Source PDFs (large binaries — not needed for the live site)
+burak.pdf
+*.pdf
+
+# Working/scratch image folders (only the final hero PNGs ship)
+images/burak-extracted/
+images/burak-pages/
+images/burak-crops/
+
+# Dev scripts
+extract_pdf.py
+crop_strip.py
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
