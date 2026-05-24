@@ -31,18 +31,22 @@
       <div class="brand-mark">D</div>
       <div>
         <div class="brand-name">DMR <em>Construction</em></div>
-        <span class="brand-sub">Building materials · Malta</span>
+        <span class="brand-sub" data-i18n="nav.brandsub">Building materials · Malta</span>
       </div>
     </a>
     <ul class="nav-links">
-      <li><a href="index.html#categories">Products</a></li>
-      <li><a href="catalogue.html">Catalogue</a></li>
-      <li><a href="index.html#about">About</a></li>
-      <li><a href="index.html#brands">Partners</a></li>
-      <li><a href="index.html#contact">Contact</a></li>
+      <li><a href="index.html#categories" data-i18n="nav.products">Products</a></li>
+      <li><a href="catalogue.html" data-i18n="nav.catalogue">Catalogue</a></li>
+      <li><a href="index.html#about" data-i18n="nav.about">About</a></li>
+      <li><a href="index.html#brands" data-i18n="nav.partners">Partners</a></li>
+      <li><a href="index.html#contact" data-i18n="nav.contact">Contact</a></li>
     </ul>
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button data-lang="en" class="active" type="button">EN</button>
+      <button data-lang="tr" type="button">TR</button>
+    </div>
     <a href="index.html#contact" class="nav-cta">
-      Request a quote
+      <span data-i18n="nav.cta">Request a quote</span>
       <span class="arrow">→</span>
     </a>
     <button class="nav-burger" aria-label="Open menu">
@@ -57,15 +61,15 @@
     <div>
       <div class="kicker" style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-bottom:18px;display:inline-flex;align-items:center;gap:12px;">
         <span style="width:28px;height:1px;background:var(--accent);display:inline-block;"></span>
-        DMR · Full catalogue
+        <span data-i18n="cat.head.kicker">DMR · Full catalogue</span>
       </div>
-      <h1>
+      <h1 data-i18n="cat.head.h1">
         Every product<br>
         we <em>stock</em>, in one place.
       </h1>
     </div>
-    <p class="lede">
-      Seven product families. All sourced from established European and regional
+    <p class="lede" data-i18n="cat.head.lede">
+      Eight product families. All sourced from established European and regional
       manufacturers. Stocked locally in Malta with delivery to your site. Talk
       to our team for technical specifications and quotations.
     </p>
@@ -75,14 +79,14 @@
 <!-- CATEGORY NAV -->
 <nav class="cat-nav" aria-label="Categories">
   <div class="cat-nav-inner">
-    <a href="#drywall" class="active">01 · Drywall plates</a>
-    <a href="#plasters">02 · Plasters</a>
-    <a href="#profiles">03 · Profiles</a>
-    <a href="#sheets">04 · Sheets &amp; plates</a>
-    <a href="#ceramics">05 · Ceramics</a>
-    <a href="#paints">06 · Paints</a>
-    <a href="#ytong">07 · Ytong &amp; brick</a>
-    <a href="#timber">08 · Timber &amp; plywood</a>
+    <a href="#drywall" class="active" data-i18n="catnav.drywall">01 · Drywall plates</a>
+    <a href="#plasters" data-i18n="catnav.plasters">02 · Plasters</a>
+    <a href="#profiles" data-i18n="catnav.profiles">03 · Profiles</a>
+    <a href="#sheets" data-i18n="catnav.sheets">04 · Sheets &amp; plates</a>
+    <a href="#ceramics" data-i18n="catnav.ceramics">05 · Ceramics</a>
+    <a href="#paints" data-i18n="catnav.paints">06 · Paints</a>
+    <a href="#ytong" data-i18n="catnav.ytong">07 · Ytong &amp; brick</a>
+    <a href="#timber" data-i18n="catnav.timber">08 · Timber &amp; plywood</a>
   </div>
 </nav>
 
@@ -91,10 +95,10 @@
   <div class="cat-section-inner">
     <div class="cat-section-head reveal">
       <div>
-        <span class="num">Category 01 / 08</span>
-        <h2>Drywall <em>plates</em></h2>
+        <span class="num" data-i18n="catsec.drywall.num">Category 01 / 08</span>
+        <h2 data-i18n="catsec.drywall.h2">Drywall <em>plates</em></h2>
       </div>
-      <p class="lede">
+      <p class="lede" data-i18n="catsec.drywall.lede">
         Gypsum boards for ceilings, partitions and dry construction. Standard,
         moisture-resistant, fire-rated and impact-resistant variants from
         Alçıbay, Fullboard and partner brands.
@@ -104,8 +108,8 @@
     <div class="cat-hero reveal">
       <img src="images/drywall-hero.png" alt="Drywall plates — DMR Construction Malta">
       <div class="cat-hero-label">
-        <div class="l">Walls &amp; ceilings,<br><em>finished right.</em></div>
-        <div class="r">01 · Drywall plates</div>
+        <div class="l" data-i18n="hero.drywall.l">Walls &amp; ceilings,<br><em>finished right.</em></div>
+        <div class="r" data-i18n="hero.drywall.r">01 · Drywall plates</div>
       </div>
     </div>
 
@@ -232,10 +236,10 @@
   <div class="cat-section-inner">
     <div class="cat-section-head reveal">
       <div>
-        <span class="num">Category 02 / 08</span>
-        <h2>Plasters</h2>
+        <span class="num" data-i18n="catsec.plasters.num">Category 02 / 08</span>
+        <h2 data-i18n="catsec.plasters.h2">Plasters</h2>
       </div>
-      <p class="lede">
+      <p class="lede" data-i18n="catsec.plasters.lede">
         Powder and ready-mix plasters for skim coats, joint filling and full
         surface finishing. Manual and machine-applied variants for every stage
         of interior finishing.
@@ -365,10 +369,10 @@
   <div class="cat-section-inner">
     <div class="cat-section-head reveal">
       <div>
-        <span class="num">Category 03 / 08</span>
-        <h2>Metal <em>profiles</em></h2>
+        <span class="num" data-i18n="catsec.profiles.num">Category 03 / 08</span>
+        <h2 data-i18n="catsec.profiles.h2">Metal <em>profiles</em></h2>
       </div>
-      <p class="lede">
+      <p class="lede" data-i18n="catsec.profiles.lede">
         Galvanised steel profiles, suspension systems and finishing accessories
         for drywall, ceiling and suspended-grid assemblies — the complete
         Burak Galvaniz range plus equivalent partner manufacturers.
@@ -688,10 +692,10 @@
   <div class="cat-section-inner">
     <div class="cat-section-head reveal">
       <div>
-        <span class="num">Category 04 / 08</span>
-        <h2>Sheets &amp; <em>plates</em></h2>
+        <span class="num" data-i18n="catsec.sheets.num">Category 04 / 08</span>
+        <h2 data-i18n="catsec.sheets.h2">Sheets &amp; <em>plates</em></h2>
       </div>
-      <p class="lede">
+      <p class="lede" data-i18n="catsec.sheets.lede">
         Trapezoidal, corrugated and flat galvanised steel sheets for roofing,
         cladding, industrial and architectural use. Painted and bare finishes
         supplied from the Burak Galvaniz mill.
@@ -701,8 +705,8 @@
     <div class="cat-hero reveal">
       <img src="images/sheets-hero.png" alt="Trapezoidal and corrugated steel sheets — Burak Galvaniz">
       <div class="cat-hero-label">
-        <div class="l">Roof, wall,<br><em>industry.</em></div>
-        <div class="r">04 · Sheets &amp; plates</div>
+        <div class="l" data-i18n="hero.sheets.l">Roof, wall,<br><em>industry.</em></div>
+        <div class="r" data-i18n="hero.sheets.r">04 · Sheets &amp; plates</div>
       </div>
     </div>
 
@@ -829,10 +833,10 @@
   <div class="cat-section-inner">
     <div class="cat-section-head reveal">
       <div>
-        <span class="num">Category 05 / 08</span>
-        <h2>Ceramics</h2>
+        <span class="num" data-i18n="catsec.ceramics.num">Category 05 / 08</span>
+        <h2 data-i18n="catsec.ceramics.h2">Ceramics</h2>
       </div>
-      <p class="lede">
+      <p class="lede" data-i18n="catsec.ceramics.lede">
         Floor and wall tiles for residential, commercial and outdoor projects.
         Porcelain, glazed ceramic, mosaic and large-format formats — including
         rectified edges for tight-joint installations.
@@ -842,8 +846,8 @@
     <div class="cat-hero reveal">
       <img src="images/ceramic-hero.png" alt="Ceramics — DMR Construction Malta">
       <div class="cat-hero-label">
-        <div class="l">Tiles for the<br><em>Mediterranean</em> build.</div>
-        <div class="r">04 · Ceramics</div>
+        <div class="l" data-i18n="hero.ceramic.l">Tiles for the<br><em>Mediterranean</em> build.</div>
+        <div class="r" data-i18n="hero.ceramic.r">05 · Ceramics</div>
       </div>
     </div>
 
@@ -970,10 +974,10 @@
   <div class="cat-section-inner">
     <div class="cat-section-head reveal">
       <div>
-        <span class="num">Category 06 / 08</span>
-        <h2>Paints</h2>
+        <span class="num" data-i18n="catsec.paints.num">Category 06 / 08</span>
+        <h2 data-i18n="catsec.paints.h2">Paints</h2>
       </div>
-      <p class="lede">
+      <p class="lede" data-i18n="catsec.paints.lede">
         Full range of interior, exterior, decorative and primer paint systems —
         including the complete Permolit Boya catalogue tinted in-house to
         thousands of colours.
@@ -983,8 +987,8 @@
     <div class="cat-hero reveal">
       <img src="images/paint-hero.png" alt="Paints — Permolit Boya, DMR Construction Malta">
       <div class="cat-hero-label">
-        <div class="l">Every colour,<br><em>tinted in-house.</em></div>
-        <div class="r">05 · Paints · Permolit Boya</div>
+        <div class="l" data-i18n="hero.paint.l">Every colour,<br><em>tinted in-house.</em></div>
+        <div class="r" data-i18n="hero.paint.r">06 · Paints · Permolit Boya</div>
       </div>
     </div>
 
@@ -1141,10 +1145,10 @@
   <div class="cat-section-inner">
     <div class="cat-section-head reveal">
       <div>
-        <span class="num">Category 07 / 08</span>
-        <h2>Ytong &amp; <em>brick</em></h2>
+        <span class="num" data-i18n="catsec.ytong.num">Category 07 / 08</span>
+        <h2 data-i18n="catsec.ytong.h2">Ytong &amp; <em>brick</em></h2>
       </div>
-      <p class="lede">
+      <p class="lede" data-i18n="catsec.ytong.lede">
         Aerated autoclaved concrete blocks, fire brick and structural masonry —
         the load-bearing and partition substrates of a modern Maltese build.
       </p>
@@ -1273,10 +1277,10 @@
   <div class="cat-section-inner">
     <div class="cat-section-head reveal">
       <div>
-        <span class="num">Category 08 / 08</span>
-        <h2>Timber &amp; <em>plywood</em></h2>
+        <span class="num" data-i18n="catsec.timber.num">Category 08 / 08</span>
+        <h2 data-i18n="catsec.timber.h2">Timber &amp; <em>plywood</em></h2>
       </div>
-      <p class="lede">
+      <p class="lede" data-i18n="catsec.timber.lede">
         Construction-grade timber, structural plywood and concrete formwork
         materials. Stocked for site-readiness in standard contractor sizes.
       </p>
@@ -1405,21 +1409,21 @@
   <div style="max-width:760px;margin:0 auto;">
     <div class="kicker" style="color:rgba(255,255,255,0.55);justify-content:center;display:inline-flex;font-family:var(--font-mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:22px;align-items:center;gap:12px;">
       <span style="width:28px;height:1px;background:var(--accent);display:inline-block;"></span>
-      Need a specific product?
+      <span data-i18n="cat.cta.kicker">Need a specific product?</span>
     </div>
-    <h2 style="font-family:var(--font-display);font-weight:400;font-size:clamp(36px,4.4vw,56px);line-height:1.04;letter-spacing:-0.022em;">
+    <h2 style="font-family:var(--font-display);font-weight:400;font-size:clamp(36px,4.4vw,56px);line-height:1.04;letter-spacing:-0.022em;" data-i18n="cat.cta.h2">
       We carry more than what's<br>on this page. <span style="font-style:italic;color:var(--accent-2);">Just ask.</span>
     </h2>
-    <p style="margin-top:24px;font-size:17px;line-height:1.6;color:rgba(255,255,255,0.7);">
+    <p style="margin-top:24px;font-size:17px;line-height:1.6;color:rgba(255,255,255,0.7);" data-i18n="cat.cta.lede">
       The DMR warehouse holds additional product lines, sizes and brand variants beyond
       this catalogue. Send us a list and we'll confirm availability.
     </p>
     <div style="margin-top:34px;display:flex;justify-content:center;gap:14px;flex-wrap:wrap;">
       <a href="index.html#contact" class="btn btn-primary" style="background:var(--accent);">
-        Contact our team
+        <span data-i18n="cat.cta.contact">Contact our team</span>
         <span class="arrow">→</span>
       </a>
-      <a href="index.html" class="btn btn-ghost" style="color:var(--white);border-color:rgba(255,255,255,0.4);">
+      <a href="index.html" class="btn btn-ghost" style="color:var(--white);border-color:rgba(255,255,255,0.4);" data-i18n="cat.cta.back">
         Back to home
       </a>
     </div>
@@ -1433,19 +1437,19 @@
       <div class="brand-mark">D</div>
       <div>
         <div class="brand-name">DMR <em style="color:var(--accent-2)">Construction</em></div>
-        <span class="brand-sub" style="color:rgba(255,255,255,0.5)">Building materials · Malta</span>
+        <span class="brand-sub" style="color:rgba(255,255,255,0.5)" data-i18n="nav.brandsub">Building materials · Malta</span>
       </div>
     </div>
     <ul class="footer-links">
-      <li><a href="index.html#categories">Products</a></li>
-      <li><a href="catalogue.html">Catalogue</a></li>
-      <li><a href="index.html#about">About</a></li>
-      <li><a href="index.html#contact">Contact</a></li>
+      <li><a href="index.html#categories" data-i18n="nav.products">Products</a></li>
+      <li><a href="catalogue.html" data-i18n="nav.catalogue">Catalogue</a></li>
+      <li><a href="index.html#about" data-i18n="nav.about">About</a></li>
+      <li><a href="index.html#contact" data-i18n="nav.contact">Contact</a></li>
     </ul>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 DMR Construction. All rights reserved.</span>
-    <span>Malta &amp; Gozo · Building materials supplier</span>
+    <span data-i18n="footer.copy">© 2026 DMR Construction. All rights reserved.</span>
+    <span data-i18n="footer.tag">Malta &amp; Gozo · Building materials supplier</span>
   </div>
 </footer>
 
