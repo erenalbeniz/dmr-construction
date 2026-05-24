@@ -312,10 +312,14 @@
   }
 
   /* ===================================================
-     Admin overrides — swap in any image uploaded via /admin
-     (stored in localStorage as base64 under dmr-img-<file>)
+     Admin overrides — images + product details
+     (stored in localStorage by /admin)
+     - dmr-img-<filename>   → base64 data URL
+     - dmr-prod-<code>      → JSON { name, desc, specs:[{k,v},...] }
      =================================================== */
   const IMG_PREFIX = 'dmr-img-';
+  const PROD_PREFIX = 'dmr-prod-';
+
   function baseName(p) {
     if (!p) return '';
     const q = p.split('?')[0].split('#')[0];
@@ -329,6 +333,37 @@
     if (stored) img.src = stored;
   }
   document.querySelectorAll('img').forEach(applyImageOverride);
+
+  document.querySelectorAll('.product-card[data-code]').forEach((card) => {
+    const code = card.getAttribute('data-code');
+    let raw = null;
+    try { raw = localStorage.getItem(PROD_PREFIX + code); } catch (_) {}
+    if (!raw) return;
+    let data;
+    try { data = JSON.parse(raw); } catch (_) { return; }
+    if (!data || typeof data !== 'object') return;
+
+    if (data.name && card.querySelector('.name')) {
+      card.querySelector('.name').textContent = data.name;
+    }
+    if (data.desc && card.querySelector('.desc')) {
+      card.querySelector('.desc').textContent = data.desc;
+    }
+    if (Array.isArray(data.specs)) {
+      const rows = card.querySelectorAll('.product-specs .row');
+      data.specs.forEach((s, i) => {
+        const row = rows[i];
+        if (!row) return;
+        if (s.k && row.querySelector('.k')) row.querySelector('.k').textContent = s.k;
+        if (s.v) {
+          const vSpan = Array.from(row.children).find(
+            (c) => !c.classList.contains('k')
+          );
+          if (vSpan) vSpan.textContent = s.v;
+        }
+      });
+    }
+  });
 
   /* ===================================================
      Hide broken product images

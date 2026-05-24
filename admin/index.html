@@ -250,6 +250,75 @@
   .prod-actions .primary:hover { background: #9a3a23; border-color: #9a3a23; }
   .prod-actions .disabled { opacity: 0.4; pointer-events: none; }
 
+  /* ---------- inline edit form ---------- */
+  .prod-edit {
+    display: none;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--line);
+    flex-direction: column;
+    gap: 10px;
+  }
+  .prod-edit.open { display: flex; }
+  .prod-edit label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .prod-edit input, .prod-edit textarea {
+    width: 100%;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.4;
+    background: var(--paper);
+    border: 1px solid var(--line-soft);
+    border-radius: 3px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 200ms ease;
+    resize: vertical;
+  }
+  .prod-edit input:focus, .prod-edit textarea:focus { border-color: var(--ink); }
+  .prod-edit textarea { min-height: 60px; }
+  .prod-edit .spec-row {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 6px;
+  }
+  .prod-edit .form-actions {
+    margin-top: 4px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .prod-edit .form-actions button {
+    padding: 9px 10px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    transition: background 200ms ease, color 200ms ease;
+  }
+  .prod-edit .form-actions button.save {
+    background: var(--ink); color: var(--white); border-color: var(--ink);
+  }
+  .prod-edit .form-actions button.save:hover { background: var(--accent); border-color: var(--accent); }
+  .prod-edit .form-actions button.reset {
+    color: #B8472B; border-color: rgba(184,71,43,0.3);
+  }
+  .prod-edit .form-actions button.reset:hover { background: #B8472B; color: var(--white); border-color: #B8472B; }
+  .prod-edit .form-actions .cancel:hover { background: var(--paper-2); }
+
   /* ---------- password gate ---------- */
   .gate {
     position: fixed; inset: 0;
@@ -436,6 +505,7 @@
 
 const ADMIN_PASSWORD = 'deneme123';
 const STORAGE_PREFIX = 'dmr-img-';
+const PROD_PREFIX = 'dmr-prod-';
 const AUTH_KEY = 'dmr-admin-auth';
 
 /* ------- product catalogue (kept in sync with catalogue.html) ------- */
@@ -533,6 +603,43 @@ function showAdmin() {
   renderFilters();
   renderGrid();
   updateMeta();
+  loadCatalogueDefaults();
+}
+
+/* fetch catalogue.html once so edit forms can show current defaults */
+let catalogueDoc = null;
+let catalogueLoading = false;
+async function loadCatalogueDefaults() {
+  if (catalogueDoc || catalogueLoading) return;
+  catalogueLoading = true;
+  try {
+    const r = await fetch('../catalogue.html');
+    const html = await r.text();
+    catalogueDoc = new DOMParser().parseFromString(html, 'text/html');
+  } catch (_) {
+    /* local file:// will fail — edit forms still work, just without
+       pre-filled defaults */
+  } finally {
+    catalogueLoading = false;
+  }
+}
+function getDefaultsForProduct(code) {
+  if (!catalogueDoc) return null;
+  const card = catalogueDoc.querySelector('.product-card[data-code="' + code + '"]');
+  if (!card) return null;
+  const specRows = Array.from(card.querySelectorAll('.product-specs .row')).map((row) => {
+    const kEl = row.querySelector('.k');
+    const vEl = Array.from(row.children).find((c) => !c.classList.contains('k'));
+    return {
+      k: kEl ? kEl.textContent.trim() : '',
+      v: vEl ? vEl.textContent.trim() : '',
+    };
+  });
+  return {
+    name: (card.querySelector('.name') || {}).textContent?.trim() || '',
+    desc: (card.querySelector('.desc') || {}).textContent?.trim() || '',
+    specs: specRows,
+  };
 }
 function showGate() {
   gate.style.display = '';
@@ -595,11 +702,23 @@ function setOverride(file, dataUrl) {
 function clearOverride(file) {
   localStorage.removeItem(STORAGE_PREFIX + file);
 }
+function getProdEdit(code) {
+  try {
+    const raw = localStorage.getItem(PROD_PREFIX + code);
+    return raw ? JSON.parse(raw) : null;
+  } catch (_) { return null; }
+}
+function setProdEdit(code, data) {
+  localStorage.setItem(PROD_PREFIX + code, JSON.stringify(data));
+}
+function clearProdEdit(code) {
+  localStorage.removeItem(PROD_PREFIX + code);
+}
 function countOverrides() {
   let n = 0;
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
-    if (k && k.indexOf(STORAGE_PREFIX) === 0) n++;
+    if (k && (k.indexOf(STORAGE_PREFIX) === 0 || k.indexOf(PROD_PREFIX) === 0)) n++;
   }
   return n;
 }
@@ -628,24 +747,30 @@ function renderGrid() {
   }
 }
 
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
 function buildCard(p) {
   const card = document.createElement('div');
   card.className = 'prod-card';
   const override = getOverride(p.file);
-  if (override) card.classList.add('overridden');
+  const edit = getProdEdit(p.code);
+  if (override || edit) card.classList.add('overridden');
 
   // image
   const imgWrap = document.createElement('div');
   imgWrap.className = 'prod-img-wrap';
-  if (override) {
+  if (override || edit) {
     const st = document.createElement('div');
     st.className = 'status';
-    st.textContent = 'New';
+    st.textContent = override && edit ? 'Edited · img' : (edit ? 'Edited' : 'New img');
     imgWrap.appendChild(st);
   }
   const img = document.createElement('img');
   img.alt = p.name;
-  // override takes precedence; else try default file (../images/...)
   img.src = override || ('../images/' + p.file);
   img.addEventListener('error', () => {
     img.style.display = 'none';
@@ -660,13 +785,14 @@ function buildCard(p) {
   // body
   const body = document.createElement('div');
   body.className = 'prod-body';
+  const displayName = (edit && edit.name) ? edit.name : p.name;
   body.innerHTML = `
     <div class="prod-meta">
-      <span class="cat">${p.cat}</span>
-      <span class="code">${p.code}</span>
+      <span class="cat">${escapeHtml(p.cat)}</span>
+      <span class="code">${escapeHtml(p.code)}</span>
     </div>
-    <div class="prod-name">${p.name}</div>
-    <div class="prod-filename">${p.file}</div>
+    <div class="prod-name">${escapeHtml(displayName)}</div>
+    <div class="prod-filename">${escapeHtml(p.file)}</div>
   `;
 
   const actions = document.createElement('div');
@@ -683,16 +809,26 @@ function buildCard(p) {
   uploadLabel.appendChild(fileIn);
   actions.appendChild(uploadLabel);
 
+  // edit details button (only meaningful for products with a code other than 'HERO')
+  const editBtn = document.createElement('button');
+  editBtn.className = p.code === 'HERO' ? 'full disabled' : 'full';
+  editBtn.type = 'button';
+  editBtn.textContent = edit ? '✎ Edit details (saved)' : '✎ Edit details';
+  if (p.code !== 'HERO') {
+    editBtn.addEventListener('click', () => toggleEdit(card, p));
+  }
+  actions.appendChild(editBtn);
+
   if (override) {
     const dl = document.createElement('a');
-    dl.textContent = '↓ Download';
+    dl.textContent = '↓ Download img';
     dl.href = override;
     dl.download = p.file;
     actions.appendChild(dl);
 
     const rm = document.createElement('button');
     rm.className = 'danger';
-    rm.textContent = '× Reset';
+    rm.textContent = '× Reset img';
     rm.addEventListener('click', () => {
       clearOverride(p.file);
       renderGrid(); updateMeta();
@@ -702,8 +838,106 @@ function buildCard(p) {
   }
 
   body.appendChild(actions);
+
+  // inline edit form (hidden until expanded)
+  const editForm = document.createElement('div');
+  editForm.className = 'prod-edit';
+  editForm.dataset.code = p.code;
+  body.appendChild(editForm);
+
   card.appendChild(body);
   return card;
+}
+
+function toggleEdit(card, p) {
+  const form = card.querySelector('.prod-edit');
+  if (form.classList.contains('open')) {
+    form.classList.remove('open');
+    form.innerHTML = '';
+    return;
+  }
+  buildEditForm(form, p);
+  form.classList.add('open');
+}
+
+function buildEditForm(container, p) {
+  const defaults = getDefaultsForProduct(p.code) || { name: p.name, desc: '', specs: [{},{},{},{}] };
+  const saved = getProdEdit(p.code) || {};
+  const current = {
+    name: saved.name || defaults.name || p.name,
+    desc: saved.desc || defaults.desc || '',
+    specs: (saved.specs && saved.specs.length) ? saved.specs : (defaults.specs || []),
+  };
+  // pad specs to 4 rows if needed
+  while (current.specs.length < 4) current.specs.push({ k: '', v: '' });
+
+  const html = [];
+  html.push(`
+    <div>
+      <label>Product name</label>
+      <input type="text" data-field="name" value="${escapeHtml(current.name)}">
+    </div>
+    <div>
+      <label>Description</label>
+      <textarea data-field="desc">${escapeHtml(current.desc)}</textarea>
+    </div>
+    <div>
+      <label>Specs (4 rows)</label>
+  `);
+  for (let i = 0; i < 4; i++) {
+    const s = current.specs[i] || { k: '', v: '' };
+    html.push(`
+      <div class="spec-row">
+        <input type="text" data-field="speck-${i}" placeholder="Label" value="${escapeHtml(s.k || '')}">
+        <input type="text" data-field="specv-${i}" placeholder="Value" value="${escapeHtml(s.v || '')}">
+      </div>
+    `);
+  }
+  html.push(`
+    </div>
+    <div class="form-actions">
+      <button type="button" class="save">Save changes</button>
+      <button type="button" class="cancel">Cancel</button>
+    </div>
+  `);
+  if (saved && Object.keys(saved).length > 0) {
+    html.push(`
+      <button type="button" class="reset" style="margin-top:6px;width:100%;padding:9px 10px;border-radius:4px;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;border:1px solid rgba(184,71,43,.3);background:transparent;color:#B8472B;">Reset details to original</button>
+    `);
+  }
+  container.innerHTML = html.join('');
+
+  container.querySelector('.save').addEventListener('click', () => {
+    const data = {
+      name: container.querySelector('[data-field="name"]').value.trim(),
+      desc: container.querySelector('[data-field="desc"]').value.trim(),
+      specs: [],
+    };
+    for (let i = 0; i < 4; i++) {
+      data.specs.push({
+        k: container.querySelector(`[data-field="speck-${i}"]`).value.trim(),
+        v: container.querySelector(`[data-field="specv-${i}"]`).value.trim(),
+      });
+    }
+    setProdEdit(p.code, data);
+    toast('Saved · ' + p.code);
+    renderGrid();
+    updateMeta();
+  });
+  container.querySelector('.cancel').addEventListener('click', () => {
+    container.classList.remove('open');
+    container.innerHTML = '';
+  });
+  const resetBtn = container.querySelector('.reset');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      if (!confirm('Reset this product\\u2019s details to the original?')) return;
+      clearProdEdit(p.code);
+      renderGrid();
+      updateMeta();
+      toast('Reset details · ' + p.code);
+    });
+  }
 }
 
 function handleUpload(e, p) {
@@ -725,11 +959,11 @@ function handleUpload(e, p) {
 
 /* ---------------- bulk actions ---------------- */
 document.getElementById('btn-clear').addEventListener('click', () => {
-  if (!confirm('Clear ALL image overrides? This cannot be undone.')) return;
+  if (!confirm('Clear ALL overrides (images + edited product details)? This cannot be undone.')) return;
   const keys = [];
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
-    if (k && k.indexOf(STORAGE_PREFIX) === 0) keys.push(k);
+    if (k && (k.indexOf(STORAGE_PREFIX) === 0 || k.indexOf(PROD_PREFIX) === 0)) keys.push(k);
   }
   keys.forEach((k) => localStorage.removeItem(k));
   renderGrid(); updateMeta();
@@ -737,23 +971,30 @@ document.getElementById('btn-clear').addEventListener('click', () => {
 });
 
 document.getElementById('btn-export-all').addEventListener('click', () => {
-  const overrides = [];
+  const images = [];
+  const edits = {};
   for (const p of PRODUCTS) {
     const v = getOverride(p.file);
-    if (v) overrides.push({ file: p.file, data: v });
+    if (v) images.push({ file: p.file, data: v });
+    const e = getProdEdit(p.code);
+    if (e) edits[p.code] = e;
   }
-  if (overrides.length === 0) {
+  if (images.length === 0 && Object.keys(edits).length === 0) {
     toast('No changes to download');
     return;
   }
-  // trigger one download per file (sequential)
+  const downloads = images.slice();
+  if (Object.keys(edits).length > 0) {
+    const blob = new Blob([JSON.stringify(edits, null, 2)], { type: 'application/json' });
+    downloads.push({ file: 'product-edits.json', data: URL.createObjectURL(blob) });
+  }
   let i = 0;
   function next() {
-    if (i >= overrides.length) {
-      toast('Downloaded ' + overrides.length + ' image(s)');
+    if (i >= downloads.length) {
+      toast('Downloaded ' + downloads.length + ' file(s)');
       return;
     }
-    const o = overrides[i++];
+    const o = downloads[i++];
     const a = document.createElement('a');
     a.href = o.data;
     a.download = o.file;
