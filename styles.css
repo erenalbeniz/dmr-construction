@@ -699,6 +699,26 @@ button { font-family: inherit; cursor: pointer; border: 0; background: transpare
 .cv-paint .s6 { background: #D6CCB3; }
 .cv-paint .s7 { background: #16242F; }
 
+.cv-sheets {
+  background: linear-gradient(135deg, #1A2E40 0%, #0E1F2D 100%);
+}
+.cv-sheets::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(115deg,
+      transparent 0 8px,
+      rgba(255,255,255,0.04) 8px 9px,
+      transparent 9px 18px,
+      rgba(255,255,255,0.08) 18px 19px),
+    repeating-linear-gradient(180deg,
+      transparent 0 22px,
+      rgba(184,71,43,0.18) 22px 24px,
+      transparent 24px 44px,
+      rgba(46,92,126,0.22) 44px 46px);
+}
+
 .cv-ytong {
   background: #E5DAC4;
 }
@@ -1350,6 +1370,36 @@ button { font-family: inherit; cursor: pointer; border: 0; background: transpare
 .pv-paint span {
   flex: 1;
   display: block;
+}
+
+.pv-sheets {
+  background: linear-gradient(135deg, #1B2F41 0%, #0B1A26 100%);
+}
+.pv-sheets::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(120deg,
+      transparent 0 10px,
+      rgba(255,255,255,0.05) 10px 11px,
+      transparent 11px 22px,
+      rgba(255,255,255,0.09) 22px 23px);
+}
+.pv-sheets::after {
+  content: "";
+  position: absolute;
+  inset: 16% 12%;
+  background:
+    repeating-linear-gradient(180deg,
+      rgba(184,71,43,0.55) 0 14px,
+      rgba(46,92,126,0.55) 14px 28px,
+      rgba(198,138,61,0.55) 28px 42px,
+      rgba(237,231,219,0.55) 42px 56px);
+  transform: skewX(-14deg);
+  border-radius: 2px;
+  box-shadow: 0 24px 50px -18px rgba(0,0,0,0.6);
+  opacity: 0.92;
 }
 
 .pv-ytong {
