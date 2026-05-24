@@ -312,6 +312,25 @@
   }
 
   /* ===================================================
+     Admin overrides — swap in any image uploaded via /admin
+     (stored in localStorage as base64 under dmr-img-<file>)
+     =================================================== */
+  const IMG_PREFIX = 'dmr-img-';
+  function baseName(p) {
+    if (!p) return '';
+    const q = p.split('?')[0].split('#')[0];
+    return q.substring(q.lastIndexOf('/') + 1);
+  }
+  function applyImageOverride(img) {
+    const src = img.getAttribute('src');
+    if (!src) return;
+    let stored = null;
+    try { stored = localStorage.getItem(IMG_PREFIX + baseName(src)); } catch (_) {}
+    if (stored) img.src = stored;
+  }
+  document.querySelectorAll('img').forEach(applyImageOverride);
+
+  /* ===================================================
      Hide broken product images
      =================================================== */
   document.querySelectorAll('img.product-img').forEach((img) => {
