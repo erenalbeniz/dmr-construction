@@ -79,6 +79,14 @@ button { font-family: inherit; cursor: pointer; border: 0; background: transpare
   align-items: center;
   gap: 12px;
 }
+.brand-logo {
+  display: block;
+  height: 52px;
+  width: auto;
+  max-width: 280px;
+  object-fit: contain;
+}
+.brand-text { display: flex; align-items: center; gap: 12px; }
 .brand-mark {
   width: 38px;
   height: 38px;
@@ -1057,7 +1065,7 @@ button { font-family: inherit; cursor: pointer; border: 0; background: transpare
 
 .cat-nav {
   position: sticky;
-  top: 73px;
+  top: 90px;
   z-index: 40;
   background: rgba(246, 243, 236, 0.92);
   backdrop-filter: saturate(140%) blur(14px);

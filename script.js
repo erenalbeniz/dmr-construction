@@ -260,7 +260,7 @@
         const target = document.querySelector(id);
         if (target) {
           e.preventDefault();
-          const offset = 80;
+          const offset = 100;
           const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
           window.scrollTo({ top, behavior: 'smooth' });
           if (navLinks && navLinks.classList.contains('open')) {
